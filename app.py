@@ -16,7 +16,8 @@ print("-----------------------------")
 board = gameboard.GameBoard()
 
 # Create a new Player called played starting at position 3,2
-played = player.Player(3,2)
+# played = player.Player(3,2)
+played = player.Player(20,18)
 
 while True:
     # board.printBoard(player.rowPosition, player.columnPosition)
@@ -30,21 +31,29 @@ while True:
         check_player_move = board.checkMove(played.rowPosition, played.columnPosition)
         if(check_player_move == True):
             played.moveUp()
+        # else:
+        #     played = player.Player(3,2)
 
     elif(selection == "s"):
         check_player_move = board.checkMove(played.rowPosition, played.columnPosition)
         if(check_player_move == True):
             played.moveDown()
+        # else:
+        #     played = player.Player(3,2)
     
     elif(selection == "a"):
         check_player_move = board.checkMove(played.rowPosition, played.columnPosition)
         if(check_player_move == True):
             played.moveLeft()
+        # else:
+        #     played = player.Player(3,2)
     
     elif(selection == "d"):
         check_player_move = board.checkMove(played.rowPosition, played.columnPosition)
         if(check_player_move == True):
             played.moveRight()
+        # else:
+        #     played = player.Player(3,2)
 
     # Check if the player has won, if so print a message and break the loop!
     check_player_win = board.checkWin(played.rowPosition, played.columnPosition)
