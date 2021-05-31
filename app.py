@@ -7,8 +7,7 @@ print("To move up: w")
 print("To move down: s")
 print("To move left: a")
 print("To move right: d")
-print("Coins: C")
-# print("Enemies: E")
+print("Collect coins ('C') in the maze but watch out for enemies ('E')!")
 
 print("Try to get to the end! Good Luck!")
 print("-----------------------------")
@@ -19,7 +18,7 @@ board = gameboard.GameBoard()
 
 # Create a new Player called played starting at position 3,2
 # played = player.Player(3,2)
-played = player.Player(20,2)
+played = player.Player(21,12)
 
 while True:
     # board.printBoard(player.rowPosition, player.columnPosition)
@@ -34,33 +33,45 @@ while True:
         check_player_move = board.checkMove(played.rowPosition, played.columnPosition)
         if(check_player_move == True):
             played.moveUp()
-        # else:
-        #     played = player.Player(3,2)
+
+        check_player_enemy = board.checkEnemies(played.rowPosition, played.columnPosition)
+        if(check_player_enemy == False):
+            print("You lose!")
+            break
 
     elif(selection == "s"):
         check_player_move = board.checkMove(played.rowPosition, played.columnPosition)
         if(check_player_move == True):
             played.moveDown()
-        # else:
-        #     played = player.Player(3,2)
-    
+
+        check_player_enemy = board.checkEnemies(played.rowPosition, played.columnPosition)
+        if(check_player_enemy == False):
+            print("You lose!")
+            break
+
     elif(selection == "a"):
         check_player_move = board.checkMove(played.rowPosition, played.columnPosition)
         if(check_player_move == True):
             played.moveLeft()
-        # else:
-        #     played = player.Player(3,2)
+
+        check_player_enemy = board.checkEnemies(played.rowPosition, played.columnPosition)
+        if(check_player_enemy == False):
+            print("You lose!")
+            break
     
     elif(selection == "d"):
         check_player_move = board.checkMove(played.rowPosition, played.columnPosition)
         if(check_player_move == True):
             played.moveRight()
-        # else:
-        #     played = player.Player(3,2)
+
+        check_player_enemy = board.checkEnemies(played.rowPosition, played.columnPosition)
+        if(check_player_enemy == False):
+            print("You lose!")
+            break
 
     # Check if the player has won, if so print a message and break the loop!
     check_player_win = board.checkWin(played.rowPosition, played.columnPosition)
     if(check_player_win == True):
-        print("Congratulations! You have won the game!")
+        print("Congratulations! You win!")
         print(f"Total Coins Collected: {board.coinsCollected}")
         break
