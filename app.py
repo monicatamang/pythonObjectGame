@@ -1,7 +1,6 @@
 import gameboard
 import player
 import enemy
-import random
 
 print("Welcome to the game!")
 print("Instructions: ")
@@ -14,161 +13,77 @@ print("Collect coins ('C') in the maze but watch out for enemies ('E')!")
 print("Try to get to the end! Good Luck!")
 print("-----------------------------")
 
-# TODO
-# Create a new GameBoard called board
+# Creating a new GameBoard called board
 board = gameboard.GameBoard()
 
-# Create a new Player called played starting at position 21,12
-played = player.Player(21,12)
+# Creating a new Player called played starting at position 20,12 and creating three enemies at different positions in the maze
+played = player.Player(20,12)
 enemyOne = enemy.Enemy(20,3)
-enemyTwo = enemy.Enemy(20,11)
+enemyTwo = enemy.Enemy(20,14)
 enemyThree = enemy.Enemy(13,14)
 
-def moveEnemyOne():
-    randomMove = random.randint(1,4)
-    print(f"EnemyOne's Random Number {randomMove}")
-    if(randomMove == 1):
-        checkEnemyOneMove = board.checkEnemyMove(enemyOne.rowPosition - 1, enemyOne.columnPosition)
-        if(checkEnemyOneMove == True):
-            enemyOne.moveUp()
-        else:
-            checkEnemyOneMove = board.checkEnemyMove(enemyOne.rowPosition + 1, enemyOne.columnPosition)
-    elif(randomMove == 2):
-        checkEnemyOneMove = board.checkEnemyMove(enemyOne.rowPosition + 1, enemyOne.columnPosition, enemyOne.rowPosition, enemyOne.columnPosition)
-        if(checkEnemyOneMove == True):
-            enemyOne.moveDown()
-    elif(randomMove == 3):
-        checkEnemyOneMove = board.checkEnemyMove(enemyOne.rowPosition, enemyOne.columnPosition - 1, enemyOne.rowPosition, enemyOne.columnPosition)
-        if(checkEnemyOneMove == True):
-            enemyOne.moveLeft()
-    elif(randomMove == 4):
-        checkEnemyOneMove = board.checkEnemyMove(enemyOne.rowPosition, enemyOne.columnPosition + 1, enemyOne.rowPosition, enemyOne.columnPosition)
-        if(checkEnemyOneMove == True):
-            enemyOne.moveRight()
+# Moving the enemies based on the structure of the maze
+def movingEnemy():
+    enemyOne.moveEnemy(board)
+    enemyTwo.moveEnemy(board)
+    enemyThree.moveEnemy(board)
 
-def moveEnemyTwo():
-    randomMove = random.randint(1,4)
-    print(f"EnemyTwo's Random Number {randomMove}")
-    if(randomMove == 1):
-        checkEnemyTwoMove = board.checkEnemyMove(enemyTwo.rowPosition - 1, enemyTwo.columnPosition, enemyTwo.rowPosition, enemyTwo.columnPosition)
-        if(checkEnemyTwoMove == True):
-            enemyTwo.moveUp()
-    elif(randomMove == 2):
-        checkEnemyTwoMove = board.checkEnemyMove(enemyTwo.rowPosition - 1, enemyTwo.columnPosition, enemyTwo.rowPosition, enemyTwo.columnPosition)
-        if(checkEnemyTwoMove == True):
-            enemyTwo.moveDown()
-    elif(randomMove == 3):
-        checkEnemyTwoMove = board.checkEnemyMove(enemyTwo.rowPosition - 1, enemyTwo.columnPosition, enemyTwo.rowPosition, enemyTwo.columnPosition)
-        if(checkEnemyTwoMove == True):
-            enemyTwo.moveLeft()
-    elif(randomMove == 4):
-        checkEnemyTwoMove = board.checkEnemyMove(enemyTwo.rowPosition - 1, enemyTwo.columnPosition, enemyTwo.rowPosition, enemyTwo.columnPosition)
-        if(checkEnemyTwoMove == True):
-            enemyTwo.moveRight()
+# Checking if any enemies has "attacked" the player, given the player's current row and column
+def enemyAttack():
+    enemyOneAttackPlayer = enemyOne.checkEnemyAttack(played.rowPosition, played.columnPosition)
+    enemyTwoAttackPlayer = enemyTwo.checkEnemyAttack(played.rowPosition, played.columnPosition)
+    enemyThreeAttackPlayer = enemyThree.checkEnemyAttack(played.rowPosition, played.columnPosition)
 
-def moveEnemyThree():
-    randomMove = random.randint(1,4)
-    print(f"EnemyThree's Random Number {randomMove}")
-    if(randomMove == 1):
-        checkEnemyThreeMove = board.checkEnemyMove(enemyThree.rowPosition - 1, enemyThree.columnPosition, enemyThree.rowPosition, enemyThree.columnPosition)
-        if(checkEnemyThreeMove == True):
-            enemyThree.moveUp()
-    elif(randomMove == 2):
-        checkEnemyThreeMove = board.checkEnemyMove(enemyThree.rowPosition - 1, enemyThree.columnPosition, enemyThree.rowPosition, enemyThree.columnPosition)
-        if(checkEnemyThreeMove == True):
-            enemyThree.moveDown()
-    elif(randomMove == 3):
-        checkEnemyThreeMove = board.checkEnemyMove(enemyThree.rowPosition - 1, enemyThree.columnPosition, enemyThree.rowPosition, enemyThree.columnPosition)
-        if(checkEnemyThreeMove == True):
-            enemyThree.moveLeft()
-    elif(randomMove == 4):
-        checkEnemyThreeMove = board.checkEnemyMove(enemyThree.rowPosition - 1, enemyThree.columnPosition, enemyThree.rowPosition, enemyThree.columnPosition)
-        if(checkEnemyThreeMove == True):
-            enemyThree.moveRight()
+    # If an enemy does "attack" the player, the player loses the game. If not, the player can continue playing the game
+    if(enemyOneAttackPlayer == True or enemyTwoAttackPlayer == True or enemyThreeAttackPlayer == True):
+        print("You lose!")
+        return True
+    return False
 
 while True:
+    # Printing the maze based on the player's current row and column and each enemy's current row and column
     board.printBoard(played.rowPosition, played.columnPosition, enemyOne.rowPosition, enemyOne.columnPosition, enemyTwo.rowPosition, enemyTwo.columnPosition, enemyThree.rowPosition, enemyThree.columnPosition)
+
+    # Tracking the current number of coins the player has collected in the maze
     board.trackCoins(played.rowPosition, played.columnPosition)
+
+    # Prompting the user to make a move
     selection = input("Make a move: ")
 
-    # TODO
-
-    # Move the player through the board
-
-    # If the player does not encounter a "wall", move the player in the specified direction
-    # If the player encounters an "enemy", the player "dies" and the game ends
-
+    # Moving the enemy to a new position in the maze
+    movingEnemy()
+    
+    # Checking to see if the enemy "attacks" a player. If the enemy does "attack" the player, end the game
+    enemyAttackPlayer = enemyAttack()
+    if(enemyAttackPlayer == True):
+        break
+        
+    # If the player wants to move up, check if there's a wall. If there is no wall, move the player up
     if(selection == "w"):
         checkPlayerMove = board.checkMove(played.rowPosition - 1, played.columnPosition)
         if(checkPlayerMove == True):
             played.moveUp()
 
-        moveEnemyOne()
-        moveEnemyTwo()
-        moveEnemyThree()
-
-        enemyOneAttackPlayer = enemyOne.checkEnemyAttack(played.rowPosition, played.columnPosition)
-        enemyTwoAttackPlayer = enemyTwo.checkEnemyAttack(played.rowPosition, played.columnPosition)
-        enemyThreeAttackPlayer = enemyThree.checkEnemyAttack(played.rowPosition, played.columnPosition)
-
-        if(enemyOneAttackPlayer == True or enemyTwoAttackPlayer == True or enemyThreeAttackPlayer == True):
-            print("You lose!")
-            break
-
-
+    # If the player wants to move down, check if there's a wall. If there is no wall, move the player down
     elif(selection == "s"):
         checkPlayerMove = board.checkMove(played.rowPosition + 1, played.columnPosition)
         if(checkPlayerMove == True):
             played.moveDown()
 
-        moveEnemyOne()
-        moveEnemyTwo()
-        moveEnemyThree()
-
-        enemyOneAttackPlayer = enemyOne.checkEnemyAttack(played.rowPosition, played.columnPosition)
-        enemyTwoAttackPlayer = enemyTwo.checkEnemyAttack(played.rowPosition, played.columnPosition)
-        enemyThreeAttackPlayer = enemyThree.checkEnemyAttack(played.rowPosition, played.columnPosition)
-
-        if(enemyOneAttackPlayer == True or enemyTwoAttackPlayer == True or enemyThreeAttackPlayer == True):
-            print("You lose!")
-            break
-
-
+    # If the player wants to move left, check if there's a wall. If there is no wall, move the player to the left
     elif(selection == "a"):
         checkPlayerMove = board.checkMove(played.rowPosition, played.columnPosition - 1)
         if(checkPlayerMove == True):
             played.moveLeft()
 
-        moveEnemyOne()
-        moveEnemyTwo()
-        moveEnemyThree()
-
-        enemyOneAttackPlayer = enemyOne.checkEnemyAttack(played.rowPosition, played.columnPosition)
-        enemyTwoAttackPlayer = enemyTwo.checkEnemyAttack(played.rowPosition, played.columnPosition)
-        enemyThreeAttackPlayer = enemyThree.checkEnemyAttack(played.rowPosition, played.columnPosition)
-
-        if(enemyOneAttackPlayer == True or enemyTwoAttackPlayer == True or enemyThreeAttackPlayer == True):
-            print("You lose!")
-            break
-    
+    # If the player wants to move right, check if there's a wall. If there is no wall, move the player to the right
     elif(selection == "d"):
         checkPlayerMove = board.checkMove(played.rowPosition, played.columnPosition + 1)
         if(checkPlayerMove == True):
             played.moveRight()
 
-        moveEnemyOne()
-        moveEnemyTwo()
-        moveEnemyThree()
-
-        enemyOneAttackPlayer = enemyOne.checkEnemyAttack(played.rowPosition, played.columnPosition)
-        enemyTwoAttackPlayer = enemyTwo.checkEnemyAttack(played.rowPosition, played.columnPosition)
-        enemyThreeAttackPlayer = enemyThree.checkEnemyAttack(played.rowPosition, played.columnPosition)
-
-        if(enemyOneAttackPlayer == True or enemyTwoAttackPlayer == True or enemyThreeAttackPlayer == True):
-            print("You lose!")
-            break
-
     # Check if the player has won, if so print a message and break the loop!
+    # Printing the total amount of coins the player has collected in the maze
     checkPlayerWin = board.checkWin(played.rowPosition, played.columnPosition)
     if(checkPlayerWin == True):
         print("Congratulations! You win!")
